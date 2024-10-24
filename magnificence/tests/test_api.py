@@ -20,6 +20,7 @@ class AppTestCase(TestCase):
         response = client.get("/magnificent-team")
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 7)
         self.assertEqual(
             response.json(),
             [
@@ -685,6 +686,7 @@ class AppTestCase(TestCase):
                     f"/magnificent-team?team_short_name={test_datum.team_short_name}"
                 )
                 self.assertEqual(response.status_code, 200)
+                self.assertEqual(len(response.json()), 7)
                 self.assertEqual(
                     response.json(),
                     test_datum.expected_data,
