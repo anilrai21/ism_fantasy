@@ -59,6 +59,8 @@ Django has [admin page](http://localhost:8000/admin/) that can be accessed with 
 
 ## Notes on my choices
 
+I noticed that the input API data changes from time to time.  The limitation of the project is that population doesn't update the fields.
+
 I have changed the magnificence calculation for Goalkeepers.  Since they don't score, I have changed it to use `saves` and `assists`
 
 I have not added `magnificence` in the API as I only needed it for calculation.  It can be easily added by changing the schema for `Element` in Django-Ninja.
@@ -78,3 +80,4 @@ I have kept a few more fields as they might just be useful.  I have limited the 
 1. Add logging for visibility that will show the bottlenecks for further improvements
 2. Depending on the bottleneck - if this is going to be called a lot and the values will stay same for some time then caching can reduce load on the resources
 3. Depending on the requirements of the Front end page, more fields can be added as I have limited myself as explained earlier.
+4. Use `update_or_create` in when populating data as it changes quite frequently
