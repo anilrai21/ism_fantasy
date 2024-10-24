@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ninja import Schema
 
 
@@ -23,3 +25,7 @@ class ElementSchema(Schema):
     penalties_saved: int
     penalties_missed: int
     saves: int
+    web_name: str
+    total_points: int
+    chance_of_playing_this_round: Optional[int]
+    chance_of_playing_next_round: Optional[int]

@@ -31,5 +31,8 @@ create-venv:
 install-dependencies:
 	pip3 install -r requirements.txt
 
-activate:
-	source venv/bin/activate
+createsuperuser:
+	python3 manage.py createsuperuser
+
+setup:
+	make install-dependencies && make makemigrations && make migrate && make populate-data && make runserver

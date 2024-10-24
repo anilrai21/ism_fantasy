@@ -2,7 +2,7 @@ from django.db import models
 
 
 class ElementTypeName(models.TextChoices):
-    GOAL_KEEPER = "GKP", "Goalkeeper"
+    GOALKEEPER = "GKP", "Goalkeeper"
     DEFENDER = "DEF", "Sub Defender"
     MIDFIELDER = "MID", "Midfielder"
     FORWARD = "FWD", "Forward"
@@ -33,6 +33,8 @@ class Element(models.Model):
     element_type = models.ForeignKey(ElementType, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=255)
     second_name = models.CharField(max_length=255)
+    web_name = models.CharField(max_length=255)
+    total_points = models.IntegerField()
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     goals_scored = models.IntegerField()
     assists = models.IntegerField()

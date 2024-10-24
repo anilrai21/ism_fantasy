@@ -1,4 +1,6 @@
 import json
+from typing import Optional
+
 from django.db.models import F, Case, When, QuerySet
 from django.db import transaction
 
@@ -9,7 +11,7 @@ from .schemas import (
     ElementInputSchema,
 )
 
-NO_OF_GOAL_KEEPER = 1
+NO_OF_GOALKEEPER = 1
 NO_OF_DEFENDERS = 2
 NO_OF_MIDFIELDERS = 3
 NO_OF_FORWARD = 1
@@ -75,6 +77,8 @@ def populate_data(delete_prev_data=True) -> None:
             team_id=element.team,
             chance_of_playing_next_round=element.chance_of_playing_next_round,
             chance_of_playing_this_round=element.chance_of_playing_this_round,
+            web_name=element.web_name,
+            total_points=element.total_points,
         )
         for element in elements_data
     ]
@@ -92,24 +96,29 @@ def delete_populated_data() -> None:
     print("Deletion Completed")
 
 
-def get_magnificent_team() -> QuerySet[Element]:
+def get_magnificent_team(
+    team_short_name: Optional[str] = None,
+) -> QuerySet[Element]:
     elements = (
         Element.objects.select_related("element_type", "team")
         .annotate(
             magnificence=Case(
                 When(
-                    element_type__singular_name_short=ElementTypeName.GOAL_KEEPER,
+                    element_type__singular_name_short=ElementTypeName.GOALKEEPER,
                     then=F("saves") + F("assists"),
                 ),
                 default=F("goals_scored") + F("assists"),
             )
         )
-        .order_by("-magnificence")
+        .order_by("-magnificence", "id")
     )
 
+    if team_short_name:
+        elements = elements.filter(team__short_name__iexact=team_short_name)
+
     goalkeepers = elements.filter(
-        element_type__singular_name_short=ElementTypeName.GOAL_KEEPER
-    )[:NO_OF_GOAL_KEEPER]
+        element_type__singular_name_short=ElementTypeName.GOALKEEPER
+    )[:NO_OF_GOALKEEPER]
 
     defenders = elements.filter(
         element_type__singular_name_short=ElementTypeName.DEFENDER
